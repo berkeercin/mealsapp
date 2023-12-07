@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mealsapp/models/category.dart';
 import 'package:mealsapp/models/meal.dart';
 import 'package:mealsapp/providers/meals_provider.dart';
+import 'package:mealsapp/widgets/meal_card.dart';
 
 class Meals extends ConsumerWidget {
   const Meals({Key? key, required this.category}) : super(key: key);
@@ -20,7 +21,7 @@ class Meals extends ConsumerWidget {
     Widget widget = ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: mealsList.length,
-        itemBuilder: (ctx, index) => Text(mealsList[index].name));
+        itemBuilder: (ctx, index) => MealCard(meal: mealsList[index]));
     if (mealsList.isEmpty) {
       widget = const Center(
         child: Text("Bu kategoride hiç bir tarif bulunamadı.."),
