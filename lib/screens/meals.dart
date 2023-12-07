@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:mealsapp/data/dummy_data.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mealsapp/models/category.dart';
 import 'package:mealsapp/models/meal.dart';
+import 'package:mealsapp/providers/meals_provider.dart';
 
-class Meals extends StatefulWidget {
+class Meals extends ConsumerWidget {
   const Meals({Key? key, required this.category}) : super(key: key);
   final Category category;
-  @override
-  _MealsState createState() => _MealsState();
-}
 
-class _MealsState extends State<Meals> {
   @override
-  Widget build(BuildContext context) {
-    List<Meal> meals = mealList
-        .where((element) => element.categoryId == widget.category.id)
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<Meal> mealsfromState = ref.watch(mealsProvider);
+    // List<Meal> meals =
+    //     mealList.where((element) => element.categoryId == category.id).toList();
+
+    List<Meal> mealsList = mealsfromState
+        .where((element) => element.categoryId == category.id)
         .toList();
-    Widget _widget = ListView.builder(
-        itemCount: meals.length,
-        itemBuilder: (ctx, index) => Text(meals[index].name));
-    if (meals.isEmpty) {
-      _widget = const Center(
+    Widget widget = ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: mealsList.length,
+        itemBuilder: (ctx, index) => Text(mealsList[index].name));
+    if (mealsList.isEmpty) {
+      widget = const Center(
         child: Text("Bu kategoride hiç bir tarif bulunamadı.."),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.category.name),
+        title: Text(category.name),
       ),
-      body: _widget,
+      body: widget,
     );
   }
 }
